@@ -45,7 +45,8 @@ export class ReactiveRegistComponent implements OnInit {
     this.formModel = fb.group({
       username: ['', [Validators.required, Validators.minLength(6)]],
       // 使用angular中预定义好的Validators校验器校验username
-      mobile: ['', myGlobals.mobileValidator],
+      mobile: ['', myGlobals.mobileValidator, myGlobals.mobileAsyncValidator],
+      // 参数1是默认，参数2是校验器如果由多个则使用数组来写，参数3是异步校验器
       // 使用自定义校验器校验mobile
       passwordsGroup: fb.group({
         password: ['', Validators.minLength(6)],

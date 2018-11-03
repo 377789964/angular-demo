@@ -1,19 +1,44 @@
 
+<h2>响应式表单校验</h2>
 <form [formGroup]="formModel" (submit)="onSubmit()">
-  <div>用户名：<input formControlName="username" type="text"></div>
-  <!-- 校验失败会显示，成功则不会显示 required是失败后返回对象中的键 username是校验的字段 -->
-  <p *ngIf="formModel.hasError('required', 'username')">用户名是必填项</p>
-  <p *ngIf="formModel.hasError('minlength', 'username')">用户名最少是6位</p>
+  <!-- 给当前字段一个校验成功的样式 -->
+  <div>用户名：<input formControlName="username" type="text" [class.ok]="formModel.get('username').valid"></div>
+  <!-- 使用touched或者untouched来判断，字段是否获取过光标，
+    实现没有获取过光标之前不显示提示信息（没有获取光标之前untouched是true,touched是false，获取后则相反）
+    当前效果：刚进入页面不显示提示信息，获取光标并进行输入的时候也不会显示，
+    当鼠标离开输入框的时候，校验失败才会显示输入框
+   -->
+  <div *ngIf="formModel.get('username').touched">
+      <!-- 校验失败会显示，成功则不会显示 required是失败后返回对象中的键 username是校验的字段 -->
+    <p *ngIf="formModel.hasError('required', 'username')">用户名是必填项</p>
+    <p *ngIf="formModel.hasError('minlength', 'username')">用户名最少是6位</p>
+  </div>
+  
   
   <div>手机号：<input formControlName="mobile" type="text"></div>
-  <p *ngIf="formModel.hasError('mobile', 'mobile')">
-    <!-- 请输入有效的手机号 -->
-    {{ formModel.getError('mobile', 'mobile')?.description }}
-    <!-- 参数1失败后返回对象中的属性名，参数2是校验的字段 
-         通过?.属性名（属性名与校验函数中返回对象中属性名一致）
-         校验函数中返回的代码：return valid ? null : { mobile: { description: "请输入有效的手机号" } }  
-         获取相应的描述-->
-  </p>
+  <!-- 使用pristine和dirty来判断，字段是否被修改过，未被修改时pristine是真，dirty是假,修改后则相反 -->
+  <div *ngIf="!formModel.get('mobile').pristine">
+      <p *ngIf="formModel.hasError('mobile', 'mobile')">
+          <!-- 请输入有效的手机号 -->
+          {{ formModel.getError('mobile', 'mobile')?.description }}
+          <!-- 参数1失败后返回对象中的属性名，参数2是校验的字段 
+               通过?.属性名（属性名与校验函数中返回对象中属性名一致）
+               校验函数中返回的代码：return valid ? null : { mobile: { description: "请输入有效的手机号" } }  
+               获取相应的描述-->
+        </p>
+  </div>
+  <!-- 
+    关于untouched、touched和pristine、dirty的总结
+    只有页面所有的字段都未获取过光标，formModel的untouched才是真，有一个字段获取了焦点则formModel的untouched就是fasle
+    只有页面所有的字段都未修改过，formModel的pristine才是真，有一个字段修改过则formModel的pristine就是fasle
+   -->
+
+   <!-- 异步校验等待校验结果的时候显示提醒信息 异步代码等待结果的时候状态pending是true-->
+   <div *ngIf="formModel.get('mobile').pending">
+    <p>正在校验手机号的合法性</p>
+   </div>
+
+  
   
   <div formGroupName="passwordsGroup">
     <div>密码：<input formControlName="password" type="password"></div>
@@ -29,3 +54,7 @@
 
   <button type="submit">注册</button>
 </form>
+
+<!-- 可以看到异步的情况 -->
+<!-- <div>{{ formModel.status }}</div> -->
+<!-- 注意如果在异步校验的字段之前有别的字段校验失败，则即使异步校验成功状态最终依然会是invalid，只有异步之前的校验都成功而且异步校验也成功最终状态才会是valid -->

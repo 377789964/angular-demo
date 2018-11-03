@@ -1,4 +1,5 @@
 
+<h2>模板式表单</h2>
 <!-- 
   模板式表单使用模板的指令
   ngForm：angular项目启动的时候会自动给所有的表达那挂这个指令
@@ -33,8 +34,12 @@
 <div>{{ phone.value | json }}</div> -->
 
 
-<form #myForm3="ngForm" (ngSubmit)="onSubmit(myForm3.value)">
-  <div>用户名：<input ngModel name="username3" type="text"></div>
+<!-- 总而言之：不推荐使用模板式表单来进行表单校验，因为数据传递非常麻烦，容易出错，而且校验需要封装指令 -->
+<!-- 在模板表单中，只能将自定义的校验封装到指令中，使用指令对表单进行校验 -->
+<!-- novalidate表示不要启动浏览器默认的表单校验而使用anglar的校验 -->
+<form #myForm3="ngForm" (ngSubmit)="onSubmit(myForm3.value, myForm3.valid)" novalidate>
+  <!-- 此处required是angular自带的校验而不是h5自带的表单校验 -->
+  <div>用户名：<input ngModel required minlength="6" name="username3" type="text"></div>
   <div>手机号：<input ngModel name="phoneNumber3" type="text"></div>
   <div ngModelGroup="passwordGroup">
     <div>密码：<input ngModel name="password3" type="password3"></div>
