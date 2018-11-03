@@ -1,0 +1,28 @@
+<p>响应式表单</p>
+<!-- 
+数据模型是指用来保存表单中的数据，由3个类组成
+FormControl:用来代表一个input元素或者日历/下拉选框等，会保存与其关联的值以及元素的校验状态和元素是否被修改过
+FormGroup: 是formControl的集合
+FotmArray: 代表整个表单或者表单的一个固定的子集
+响应式表单不能使用本地变量引用
+ -->
+ <!-- [formGroup]="formModel"需要[]是因为formModel是变量，angulr会解析该变量 -->
+<form  [formGroup]="formModel" (submit)="onsubmit()">
+<!-- formGroupName="dateRange"不需要[]是因为dateRange就是一个字符串，不需要angular去解析 -->
+  <div formGroupName="dateRange">
+    起始日期：<input type="date" formControlName="from">
+    截至日期：<input type="date" formControlName="to">
+  </div>
+  <div>
+    <ul formArrayName="emails">
+        <li *ngFor="let item of this.formModel.get('emails').controls; let i=index">
+          <input type="text" [formControlName]="i">
+        </li>
+    </ul>
+    <button type="button" (click)="addEmial()">增加email</button>
+  </div>
+  <button type="submit">保存</button>
+</form>
+
+<input type="text" [formControl]="username">
+<div>{{ username.value | json }}</div>

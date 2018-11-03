@@ -1,0 +1,44 @@
+
+<!-- 
+  模板式表单使用模板的指令
+  ngForm：angular项目启动的时候会自动给所有的表达那挂这个指令
+          ngForm指令会隐式的创建一个FormGroup类型的实例，实例中会存储表单的数据模型
+          由于整个表达被angular接管了，因此表单中写的属性不管用了（拦截原声html事件）
+          angluar解析表单的时候form标签会自动添加ngForm指令
+          <div ngForm></div>这样写div也会被angular接管为表单
+          如果不希望angular接管表单可使用<form ngNoForm></form>
+  ngModel: 有该指令的表单元素的数据都会被添加到表单的数据模型上
+           会隐式的创建一个FormControl类型的实例，来代表表单中字段的数据模型，并在实例中存储字段的值
+  ngModelGroup：该指令会创建一个FormGroup类型的实例 ，该对象会嵌套在FormGroup对象中
+ -->
+<!-- <p>模板式表单</p>
+<form #myForm="ngForm" (ngSubmit)="onSubmit(myForm.value)">
+  <div>用户名：<input ngModel name="username" type="text"></div>
+  <div>手机号：<input #phoneNumber="ngModel" ngModel name="phoneNumber" type="text"></div>
+  <div>密码：<input type="password"></div>
+  <div>确认密码：<input type="password"></div>
+  <button type="submit">注册</button>
+</form>
+<div>{{ myForm.value | json }}</div>
+<div>{{ phoneNumber.value | json }}</div> -->
+
+<!-- 使用ngModelGroup指令将一小部分字段管理起来 -->
+<!-- <form #myForm2="ngForm" (ngSubmit)="onSubmit(myForm2.value)">
+  <div ngModelGroup="userInfo">
+      <div>用户名：<input ngModel name="name" type="text"></div>
+      <div>手机号：<input #phone="ngModel" ngModel name="phone" type="text"></div>
+  </div>
+</form>
+<div>{{ myForm2.value | json }}</div>
+<div>{{ phone.value | json }}</div> -->
+
+
+<form #myForm3="ngForm" (ngSubmit)="onSubmit(myForm3.value)">
+  <div>用户名：<input ngModel name="username3" type="text"></div>
+  <div>手机号：<input ngModel name="phoneNumber3" type="text"></div>
+  <div ngModelGroup="passwordGroup">
+    <div>密码：<input ngModel name="password3" type="password3"></div>
+    <div>确认密码：<input ngModel name="pcomfirm3" type="pcomfirm3"></div>
+  </div>
+  <button type="submit">注册</button>
+</form>

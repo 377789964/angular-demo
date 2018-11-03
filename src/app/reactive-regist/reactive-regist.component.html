@@ -1,0 +1,31 @@
+
+<form [formGroup]="formModel" (submit)="onSubmit()">
+  <div>用户名：<input formControlName="username" type="text"></div>
+  <!-- 校验失败会显示，成功则不会显示 required是失败后返回对象中的键 username是校验的字段 -->
+  <p *ngIf="formModel.hasError('required', 'username')">用户名是必填项</p>
+  <p *ngIf="formModel.hasError('minlength', 'username')">用户名最少是6位</p>
+  
+  <div>手机号：<input formControlName="mobile" type="text"></div>
+  <p *ngIf="formModel.hasError('mobile', 'mobile')">
+    <!-- 请输入有效的手机号 -->
+    {{ formModel.getError('mobile', 'mobile')?.description }}
+    <!-- 参数1失败后返回对象中的属性名，参数2是校验的字段 
+         通过?.属性名（属性名与校验函数中返回对象中属性名一致）
+         校验函数中返回的代码：return valid ? null : { mobile: { description: "请输入有效的手机号" } }  
+         获取相应的描述-->
+  </p>
+  
+  <div formGroupName="passwordsGroup">
+    <div>密码：<input formControlName="password" type="password"></div>
+    <!-- 由于password字段不是直接在formGroup下面而是在passwordsGroup下面，因此参数2以数组形式书写
+    则会在formGroup先查找passwordsGroup，然后在passwordsGroup里面再找password字段 -->
+    <p *ngIf="formModel.hasError('minlength', ['passwordsGroup', 'password'])">密码最少是6位</p>
+    <div>确认密码：<input formControlName="pconfirm" type="password"></div>
+  </div>
+  <p *ngIf="formModel.hasError('equal', 'passwordsGroup')">
+    <!-- 两次密码匹配不一致 -->
+    {{ formModel.getError('equal', 'passwordsGroup')?.description }}
+  </p>
+
+  <button type="submit">注册</button>
+</form>
